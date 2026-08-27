@@ -1,0 +1,2974 @@
+<!doctype html>
+<html lang="en" class="lenis">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>STUDIO NOIR — Architecture & Interior Design</title>
+  <meta name="description" content="Editorial, cinematic architecture and interior design studio crafting timeless spaces for luxury-conscious clients worldwide." />
+  
+  <!-- Typography: Cormorant Garamond & Playfair Display (Serif) + Inter & Plus Jakarta Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Inter:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- GSAP, ScrollTrigger & Lenis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      --bg-warm: #F4F1EC;
+      --bg-dark: #121212;
+      --bg-card: #ECE8E1;
+      --text-charcoal: #1A1A1A;
+      --text-muted: #6B6864;
+      --text-light: #F4F1EC;
+      --accent-gold: #B08D57;
+      --accent-gold-hover: #987744;
+      --border-subtle: rgba(26, 26, 26, 0.12);
+      --border-subtle-light: rgba(244, 241, 236, 0.15);
+      --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --ease-luxury: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out equivalent */
+      --ease-curtain: cubic-bezier(0.77, 0, 0.175, 1);
+      --transition-smooth: 0.6s var(--ease-luxury);
+    }
+
+    /* Reset & Base Setup */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background-color: var(--bg-warm);
+      color: var(--text-charcoal);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-charcoal);
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+      cursor: default;
+    }
+
+    /* Lenis Smooth Scroll Integration */
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+
+    /* Selection */
+    ::selection {
+      background-color: var(--accent-gold);
+      color: var(--bg-warm);
+    }
+
+    /* Links & Buttons */
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    button {
+      font-family: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+      touch-action: manipulation;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* Typography Helpers */
+    .font-serif {
+      font-family: var(--font-serif);
+      font-feature-settings: "liga" 1, "kern" 1;
+    }
+    .font-sans {
+      font-family: var(--font-sans);
+    }
+
+    /* Container */
+    .noir-container {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding-left: clamp(1.25rem, 4vw, 4.5rem);
+      padding-right: clamp(1.25rem, 4vw, 4.5rem);
+    }
+
+    /* ==========================================================================
+       CUSTOM LUXURY CURSOR (Desktop only)
+       ========================================================================== */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: var(--text-charcoal);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s var(--ease-luxury), height 0.3s var(--ease-luxury), background-color 0.3s var(--ease-luxury), border 0.3s var(--ease-luxury), opacity 0.2s ease;
+    }
+
+    .cursor-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(26, 26, 26, 0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+      transition: width 0.35s var(--ease-luxury), height 0.35s var(--ease-luxury), background-color 0.35s var(--ease-luxury), border-color 0.35s var(--ease-luxury), transform 0.1s ease-out;
+    }
+
+    .cursor-follower span {
+      display: none;
+      font-weight: 500;
+      font-family: var(--font-sans);
+    }
+
+    /* Hover States for Cursor */
+    body.cursor-hover-project .cursor-follower {
+      width: 90px;
+      height: 90px;
+      background: rgba(26, 26, 26, 0.92);
+      border-color: var(--accent-gold);
+      backdrop-filter: blur(4px);
+    }
+    body.cursor-hover-project .cursor-follower span {
+      display: inline-block;
+    }
+    body.cursor-hover-project .custom-cursor {
+      opacity: 0;
+    }
+
+    body.cursor-hover-link .cursor-follower {
+      width: 54px;
+      height: 54px;
+      border-color: var(--accent-gold);
+      background-color: rgba(176, 141, 87, 0.08);
+    }
+
+    @media (pointer: coarse), (max-width: 900px) {
+      .custom-cursor, .cursor-follower {
+        display: none !important;
+      }
+    }
+
+    /* ==========================================================================
+       PAGE PRELOADER & CURTAIN TRANSITION
+       ========================================================================== */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-dark);
+      color: var(--bg-warm);
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      will-change: transform;
+    }
+    .preloader-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+    .preloader-center {
+      text-align: center;
+    }
+    .preloader-brand {
+      font-size: clamp(2rem, 7vw, 5.5rem);
+      letter-spacing: 0.18em;
+      font-weight: 300;
+      line-height: 1.1;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .preloader-sub {
+      font-size: clamp(0.68rem, 1.5vw, 0.92rem);
+      letter-spacing: clamp(0.18em, 0.5vw, 0.35em);
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-top: 1rem;
+    }
+    .preloader-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .preloader-counter {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1;
+    }
+    .preloader-bar-wrap {
+      width: 100%;
+      max-width: clamp(140px, 40vw, 280px);
+      height: 1px;
+      background: rgba(244, 241, 236, 0.2);
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+    .preloader-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gold);
+      transition: width 0.1s linear;
+    }
+
+    /* ==========================================================================
+       NAVIGATION
+       ========================================================================== */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 9000;
+      padding: clamp(1.25rem, 2.5vw, 2rem) 0;
+      transition: padding 0.5s var(--ease-luxury), background-color 0.5s var(--ease-luxury), border-color 0.5s var(--ease-luxury), backdrop-filter 0.5s var(--ease-luxury);
+      border-bottom: 1px solid transparent;
+    }
+
+    #navbar.scrolled {
+      padding: clamp(0.85rem, 1.5vw, 1.1rem) 0;
+      background-color: rgba(244, 241, 236, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: var(--text-charcoal);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 44px;
+    }
+
+    .nav-logo .gold-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--accent-gold);
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.2rem, 2.8vw, 3rem);
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: var(--text-charcoal);
+      position: relative;
+      padding: 0.4rem 0;
+      display: inline-block;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--accent-gold);
+      transition: width 0.4s var(--ease-luxury);
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 500;
+      padding: 0.75rem 1.75rem;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--text-charcoal);
+      color: var(--text-charcoal);
+      position: relative;
+      overflow: hidden;
+      transition: color 0.4s var(--ease-luxury), border-color 0.4s var(--ease-luxury);
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--text-charcoal);
+      transform: translateY(100%);
+      transition: transform 0.4s var(--ease-luxury);
+      z-index: -1;
+    }
+
+    .nav-cta:hover {
+      color: var(--bg-warm);
+    }
+
+    .nav-cta:hover::before {
+      transform: translateY(0);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      width: 44px;
+      height: 44px;
+      padding: 8px;
+      z-index: 9500;
+      cursor: pointer;
+    }
+    .mobile-menu-btn span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--text-charcoal);
+      transition: transform 0.35s var(--ease-luxury), opacity 0.3s ease, background-color 0.3s ease;
+      transform-origin: center;
+    }
+
+    /* Mobile Overlay */
+    .mobile-nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: var(--bg-warm);
+      z-index: 9200;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(2rem, 8vw, 4rem);
+      transform: translateY(-100%);
+      transition: transform 0.6s var(--ease-curtain);
+      pointer-events: none;
+    }
+    .mobile-nav-overlay.open {
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .mobile-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.2rem, 3.5vh, 2.2rem);
+    }
+    .mobile-nav-link {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--bg-warm);
+      display: inline-block;
+      min-height: 44px;
+      line-height: 44px;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .mobile-nav-link:hover, .mobile-nav-link:active {
+      color: var(--accent-gold);
+      transform: translateX(8px);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding-top: 6rem;
+      padding-bottom: clamp(2.5rem, 6vh, 6rem);
+      overflow: hidden;
+    }
+
+    .hero-media-wrapper {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.08);
+      animation: kenBurns 24s infinite alternate ease-in-out;
+      filter: brightness(0.82) contrast(1.08);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(18, 18, 18, 0.45) 0%,
+        rgba(18, 18, 18, 0.1) 40%,
+        rgba(18, 18, 18, 0.6) 80%,
+        rgba(18, 18, 18, 0.9) 100%
+      );
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      color: var(--bg-warm);
+      width: 100%;
+    }
+
+    .hero-tag {
+      font-size: clamp(0.75rem, 1.2vw, 0.88rem);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent-gold);
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 7.5vw, 7.8rem);
+      font-weight: 300;
+      line-height: 0.98;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      max-width: 1200px;
+      word-break: break-word;
+    }
+
+    .hero-title .italic-word {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent-gold);
+    }
+
+    .hero-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-subtle-light);
+      padding-top: 1.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .hero-positioning {
+      font-size: clamp(0.88rem, 1.4vw, 1.2rem);
+      font-weight: 300;
+      max-width: 580px;
+      color: rgba(244, 241, 236, 0.85);
+      line-height: 1.6;
+    }
+
+    .hero-scroll-indicator {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: clamp(0.7rem, 1.2vw, 0.75rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+      opacity: 0.75;
+    }
+
+    .scroll-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-gold);
+      position: relative;
+    }
+
+    .scroll-pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-gold);
+      animation: pulseIndicator 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+
+    @keyframes pulseIndicator {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    @keyframes kenBurns {
+      0% { transform: scale(1.05) translate(0, 0); }
+      100% { transform: scale(1.15) translate(-1%, -1%); }
+    }
+
+    /* ==========================================================================
+       SECTION 2: PHILOSOPHY & MANIFESTO
+       ========================================================================== */
+    #philosophy {
+      padding: clamp(4.5rem, 10vh, 11rem) 0;
+      position: relative;
+    }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2rem, 5vw, 6rem);
+    }
+
+    @media (min-width: 992px) {
+      .philosophy-grid {
+        grid-template-columns: 280px 1fr;
+        gap: 6rem;
+      }
+    }
+
+    .section-eyebrow {
+      font-size: clamp(0.72rem, 1.4vw, 0.8rem);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 500;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 1px;
+      background: var(--accent-gold);
+    }
+
+    .philosophy-text-container {
+      max-width: 950px;
+    }
+
+    .manifesto-statement {
+      font-size: clamp(1.4rem, 3.4vw, 3.4rem);
+      font-weight: 300;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      color: var(--text-charcoal);
+      margin-bottom: clamp(1.75rem, 4vw, 3rem);
+    }
+
+    .manifesto-statement .word {
+      display: inline-block;
+      opacity: 0.2;
+      transition: opacity 0.3s ease, color 0.3s ease;
+    }
+
+    .manifesto-statement .word.active {
+      opacity: 1;
+      color: var(--text-charcoal);
+    }
+
+    .manifesto-statement .gold-accent {
+      color: var(--accent-gold);
+      font-style: italic;
+    }
+
+    .philosophy-subtext {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.5rem, 3vw, 2.5rem);
+      padding-top: clamp(1.5rem, 3vw, 2.5rem);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    @media (min-width: 640px) {
+      .philosophy-subtext {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .philosophy-body {
+      font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+      color: var(--text-muted);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    /* ==========================================================================
+       SECTION 3: SELECTED PROJECTS (Full-Height Panels / Parallax)
+       ========================================================================== */
+    #projects {
+      padding: clamp(3.5rem, 7vh, 8rem) 0 clamp(4.5rem, 10vh, 12rem);
+      background-color: var(--bg-warm);
+    }
+
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: clamp(2.5rem, 5vh, 5.5rem);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.75rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .projects-heading {
+      font-size: clamp(1.8rem, 4.5vw, 4.2rem);
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .projects-filter-bar {
+      display: flex;
+      gap: clamp(0.75rem, 2vw, 1.5rem);
+      list-style: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.25rem;
+      scrollbar-width: none;
+      max-width: 100%;
+    }
+    .projects-filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      font-size: clamp(0.72rem, 1.2vw, 0.78rem);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.4rem 0.2rem;
+      position: relative;
+      white-space: nowrap;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.3s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      color: var(--text-charcoal);
+    }
+
+    .filter-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent-gold);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(3rem, 6vh, 8rem);
+    }
+
+    /* Asymmetric Architectural Project Card */
+    .project-card {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .project-card.featured-wide {
+      grid-column: 1 / -1;
+    }
+
+    .project-card-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    @media (min-width: 992px) {
+      .project-card.layout-left .project-card-inner {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+        gap: 4rem;
+      }
+      .project-card.layout-right .project-card-inner {
+        grid-template-columns: 0.8fr 1.2fr;
+        align-items: center;
+        gap: 4rem;
+      }
+      .project-card.layout-right .project-media {
+        order: 2;
+      }
+      .project-card.layout-right .project-info {
+        order: 1;
+      }
+    }
+
+    .project-media {
+      position: relative;
+      height: clamp(260px, 46vw, 650px);
+      width: 100%;
+      overflow: hidden;
+      background: #dfdad1;
+    }
+
+    .project-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s var(--ease-luxury), filter 0.8s ease;
+      will-change: transform;
+    }
+
+    .project-card:hover .project-media img {
+      transform: scale(1.06);
+    }
+
+    .project-badge {
+      position: absolute;
+      top: clamp(0.75rem, 2vw, 1.5rem);
+      left: clamp(0.75rem, 2vw, 1.5rem);
+      background: rgba(244, 241, 236, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 0.35rem 0.85rem;
+      font-size: clamp(0.65rem, 1.2vw, 0.72rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text-charcoal);
+      z-index: 2;
+    }
+
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .project-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      font-size: clamp(0.7rem, 1.2vw, 0.75rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    .project-number {
+      font-family: var(--font-serif);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .project-title {
+      font-size: clamp(1.5rem, 3.2vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+      transition: color 0.3s ease;
+      word-break: break-word;
+    }
+
+    .project-title-link {
+      position: relative;
+      display: inline-block;
+    }
+
+    .project-title-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--accent-gold);
+      transition: width 0.5s var(--ease-luxury);
+    }
+
+    .project-card:hover .project-title-link::after {
+      width: 100%;
+    }
+
+    .project-desc {
+      font-size: clamp(0.88rem, 1.4vw, 0.98rem);
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      max-width: 480px;
+      font-weight: 300;
+    }
+
+    .project-specs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    @media (max-width: 600px) {
+      .project-specs {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .project-specs {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spec-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .spec-value {
+      font-size: clamp(0.8rem, 1.4vw, 0.88rem);
+      font-weight: 500;
+      color: var(--text-charcoal);
+    }
+
+    /* ==========================================================================
+       SECTION 4: APPROACH (3 Columns / Large Faded Numbers)
+       ========================================================================== */
+    #approach {
+      padding: clamp(4.5rem, 10vh, 11rem) 0;
+      background-color: #EDE8E0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .approach-header {
+      margin-bottom: clamp(2.5rem, 5vh, 6rem);
+      max-width: 750px;
+    }
+
+    .approach-heading {
+      font-size: clamp(1.8rem, 4.2vw, 4.4rem);
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      margin-top: 1rem;
+      word-break: break-word;
+    }
+
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2.5rem, 4vw, 3.5rem);
+    }
+
+    @media (min-width: 900px) {
+      .approach-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3.5rem;
+      }
+    }
+
+    .approach-column {
+      position: relative;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border-subtle);
+      transition: transform 0.4s var(--ease-luxury);
+    }
+
+    .approach-column:hover {
+      transform: translateY(-6px);
+    }
+
+    .approach-number {
+      font-family: var(--font-serif);
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      line-height: 0.85;
+      font-weight: 300;
+      color: rgba(26, 26, 26, 0.12);
+      margin-bottom: 1.25rem;
+      transition: color 0.4s ease;
+    }
+
+    .approach-column:hover .approach-number {
+      color: var(--accent-gold);
+    }
+
+    .approach-title {
+      font-size: clamp(1.25rem, 2.2vw, 1.85rem);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      color: var(--text-charcoal);
+    }
+
+    .approach-body {
+      font-size: clamp(0.88rem, 1.4vw, 0.95rem);
+      color: var(--text-muted);
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
+
+    .approach-tags {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .approach-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-charcoal);
+      font-weight: 400;
+    }
+
+    /* ==========================================================================
+       SECTION 5: STUDIO (Split Layout: Photo + Bio + Stats)
+       ========================================================================== */
+    #studio {
+      padding: clamp(4.5rem, 10vh, 12rem) 0;
+      background-color: var(--bg-warm);
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2.5rem, 5vw, 6rem);
+      align-items: center;
+    }
+
+    @media (min-width: 992px) {
+      .studio-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+      }
+    }
+
+    .studio-portrait-wrapper {
+      position: relative;
+    }
+
+    .studio-portrait-media {
+      position: relative;
+      height: clamp(340px, 55vh, 750px);
+      width: 100%;
+      overflow: hidden;
+      background: #dfdad1;
+    }
+
+    .studio-portrait-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%) contrast(1.05);
+      transition: transform 1.2s var(--ease-luxury), filter 0.8s ease;
+    }
+
+    .studio-portrait-wrapper:hover .studio-portrait-media img {
+      transform: scale(1.04);
+      filter: grayscale(0%) contrast(1.08);
+    }
+
+    .studio-caption {
+      position: absolute;
+      bottom: -1.75rem;
+      right: 2rem;
+      background: var(--bg-dark);
+      color: var(--bg-warm);
+      padding: 1.25rem 2rem;
+      max-width: 320px;
+      z-index: 4;
+    }
+
+    @media (max-width: 768px) {
+      .studio-caption {
+        position: static;
+        margin-top: 1rem;
+        max-width: 100%;
+        padding: 1.25rem 1.5rem;
+      }
+    }
+
+    .studio-caption-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.35rem;
+    }
+
+    .studio-caption-text {
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .studio-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .studio-heading {
+      font-size: clamp(1.8rem, 3.8vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+      word-break: break-word;
+    }
+
+    .studio-bio {
+      font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .studio-bio p + p {
+      margin-top: 1.25rem;
+    }
+
+    /* Animated Count-up Stats Grid */
+    .studio-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      .studio-stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 1rem;
+      }
+    }
+
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-number-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 0.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-number {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      font-weight: 300;
+      color: var(--text-charcoal);
+      line-height: 1;
+    }
+
+    .stat-suffix {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: var(--accent-gold);
+      font-weight: 300;
+    }
+
+    .stat-label {
+      font-size: clamp(0.7rem, 1.1vw, 0.78rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* ==========================================================================
+       SECTION 6: TESTIMONIAL (Parallax Quote)
+       ========================================================================== */
+    #testimonial {
+      position: relative;
+      padding: clamp(5rem, 12vh, 14rem) 0;
+      color: var(--bg-warm);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .testimonial-bg-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .testimonial-bg {
+      width: 100%;
+      height: 120%;
+      object-fit: cover;
+      filter: brightness(0.38) contrast(1.1);
+      transform: translateY(-10%);
+    }
+
+    .testimonial-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.7);
+      z-index: 2;
+    }
+
+    .testimonial-container {
+      position: relative;
+      z-index: 3;
+      max-width: 1050px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .quote-icon {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1;
+      color: var(--accent-gold);
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.35rem, 3.2vw, 3.4rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.35;
+      letter-spacing: 0.01em;
+      margin-bottom: 2rem;
+    }
+
+    .testimonial-author {
+      font-size: clamp(0.78rem, 1.4vw, 0.88rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+    }
+
+    .testimonial-context {
+      font-size: clamp(0.72rem, 1.2vw, 0.8rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(244, 241, 236, 0.7);
+    }
+
+    /* ==========================================================================
+       SECTION 7: CONTACT & FOOTER
+       ========================================================================== */
+    #contact {
+      padding: clamp(4.5rem, 10vh, 12rem) 0 3.5rem;
+      background-color: var(--bg-dark);
+      color: var(--bg-warm);
+      position: relative;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      margin-bottom: clamp(4rem, 8vh, 8rem);
+    }
+
+    @media (min-width: 992px) {
+      .contact-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+      }
+    }
+
+    .contact-statement {
+      font-size: clamp(1.8rem, 4.2vw, 4.6rem);
+      font-weight: 300;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+      word-break: break-word;
+    }
+
+    .contact-statement .gold-text {
+      color: var(--accent-gold);
+      font-style: italic;
+    }
+
+    .contact-subtext {
+      font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+      color: rgba(244, 241, 236, 0.7);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+    }
+
+    .studio-locations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      border-top: 1px solid var(--border-subtle-light);
+      padding-top: 1.75rem;
+    }
+
+    .location-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .location-city {
+      font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .location-address {
+      font-size: 0.85rem;
+      color: rgba(244, 241, 236, 0.6);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* Luxury Contact Form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .form-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(244, 241, 236, 0.25);
+      padding: 0.75rem 0;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--bg-warm);
+      border-radius: 0;
+      outline: none;
+      transition: border-color 0.4s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: rgba(244, 241, 236, 0.3);
+      font-weight: 300;
+    }
+
+    .form-select option {
+      background: var(--bg-dark);
+      color: var(--bg-warm);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .form-submit-btn {
+      align-self: flex-start;
+      margin-top: 0.5rem;
+      padding: 1rem 2.5rem;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-gold);
+      color: var(--bg-dark);
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.4s var(--ease-luxury), color 0.4s var(--ease-luxury);
+    }
+
+    @media (max-width: 600px) {
+      .form-submit-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    .form-submit-btn:hover {
+      background: var(--bg-warm);
+      color: var(--bg-dark);
+    }
+
+    .form-status-message {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--accent-gold);
+      display: none;
+    }
+
+    /* Footer */
+    .studio-footer {
+      border-top: 1px solid var(--border-subtle-light);
+      padding-top: 3rem;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg-warm);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: clamp(1.25rem, 2.5vw, 2.5rem);
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(244, 241, 236, 0.7);
+      position: relative;
+      padding: 0.4rem 0;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .footer-link::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-gold);
+      transition: width 0.4s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--bg-warm);
+    }
+
+    .footer-link:hover::after {
+      width: 100%;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: rgba(244, 241, 236, 0.4);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+    }
+
+    /* ==========================================================================
+       PROJECT DETAIL MODAL / DRAWER (Quick Inspection)
+       ========================================================================== */
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 99000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s var(--ease-luxury);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .project-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content-panel {
+      width: 100%;
+      max-width: 900px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--bg-warm);
+      color: var(--text-charcoal);
+      overflow-y: auto;
+      padding: clamp(1.5rem, 4vw, 4.5rem);
+      transform: translateX(100%);
+      transition: transform 0.6s var(--ease-luxury);
+      position: relative;
+    }
+
+    .project-modal.active .modal-content-panel {
+      transform: translateX(0);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: clamp(1.25rem, 3vw, 2rem);
+      right: clamp(1.25rem, 3vw, 2rem);
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-charcoal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      min-height: 44px;
+      min-width: 44px;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--text-charcoal);
+      color: var(--bg-warm);
+    }
+
+    .modal-category {
+      font-size: clamp(0.72rem, 1.2vw, 0.78rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .modal-title {
+      font-size: clamp(1.8rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.75rem;
+      word-break: break-word;
+    }
+
+    .modal-hero-img {
+      width: 100%;
+      height: clamp(220px, 35vw, 420px);
+      object-fit: cover;
+      margin-bottom: 2rem;
+    }
+
+    .modal-grid-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 1.75rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .modal-desc {
+      font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+
+    .modal-gallery-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .modal-gallery-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .modal-gallery-row img {
+      width: 100%;
+      height: clamp(200px, 30vw, 260px);
+      object-fit: cover;
+    }
+
+    /* Responsive Utilities */
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CUSTOM MOUSE CURSOR -->
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="cursor-follower" id="cursorFollower">
+    <span>VIEW</span>
+  </div>
+
+  <!-- PAGE PRELOADER -->
+  <div id="preloader">
+    <div class="preloader-header">
+      <span>STUDIO NOIR</span>
+      <span>PARIS · DUBAI · TOKYO</span>
+    </div>
+    <div class="preloader-center">
+      <h1 class="preloader-brand font-serif">STUDIO NOIR</h1>
+      <p class="preloader-sub">ARCHITECTURE & INTERIOR DESIGN</p>
+    </div>
+    <div class="preloader-footer">
+      <div class="preloader-counter" id="preloadCounter">00</div>
+      <div class="preloader-bar-wrap">
+        <div class="preloader-bar" id="preloadBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION -->
+  <nav id="navbar">
+    <div class="noir-container nav-inner">
+      <a href="#hero" class="nav-logo" id="navLogo">
+        <span>STUDIO NOIR</span>
+        <span class="gold-dot"></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#philosophy" class="nav-link">Philosophy</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#approach" class="nav-link">Approach</a></li>
+        <li><a href="#studio" class="nav-link">Studio</a></li>
+        <li><a href="#testimonial" class="nav-link">Praise</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <a href="#contact" class="nav-cta" id="navCta">Inquire Project</a>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <ul class="mobile-nav-list">
+      <li><a href="#hero" class="mobile-nav-link">Home</a></li>
+      <li><a href="#philosophy" class="mobile-nav-link">Philosophy</a></li>
+      <li><a href="#projects" class="mobile-nav-link">Selected Projects</a></li>
+      <li><a href="#approach" class="mobile-nav-link">Approach</a></li>
+      <li><a href="#studio" class="mobile-nav-link">The Studio</a></li>
+      <li><a href="#testimonial" class="mobile-nav-link">Praise</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <main id="main-content">
+    
+    <!-- =======================================================================
+         SECTION 1: HERO
+         ======================================================================= -->
+    <section id="hero">
+      <div class="hero-media-wrapper">
+        <img 
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2600&auto=format&fit=crop" 
+          alt="STUDIO NOIR Signature Architectural Residence" 
+          class="hero-image"
+          id="heroBgImage"
+        />
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="noir-container hero-content">
+        <div class="hero-tag" id="heroTag">Bespoke Architectural Masterpieces</div>
+        
+        <h1 class="hero-title font-serif" id="heroTitle">
+          SCULPTING <span class="italic-word">SILENCE</span><br>
+          & TIMELESS FORM.
+        </h1>
+
+        <div class="hero-bottom-row" id="heroBottom">
+          <p class="hero-positioning">
+            An international architecture and interior atelier creating monumental, poetic residential sanctuaries for the world's most discerning patrons.
+          </p>
+
+          <div class="hero-scroll-indicator">
+            <span class="scroll-pulse-dot"></span>
+            <span>DISCOVER MONOGRAPHS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 2: PHILOSOPHY (Line-by-Line Manifesto Reveal)
+         ======================================================================= -->
+    <section id="philosophy">
+      <div class="noir-container philosophy-grid">
+        <div class="philosophy-sidebar">
+          <div class="section-eyebrow">01 / PHILOSOPHY</div>
+        </div>
+
+        <div class="philosophy-text-container">
+          <h2 class="manifesto-statement font-serif" id="manifestoHeading">
+            We reject the transient noise of trends. True luxury is not ornamentation; it is the <span class="gold-accent">sacred harmony</span> of monolithic mass, atmospheric shadow, honest raw stone, and the uncompromising rhythm of pure light.
+          </h2>
+
+          <div class="philosophy-subtext">
+            <p class="philosophy-body">
+              Founded at the intersection of European classical discipline and Japanese spatial reduction, STUDIO NOIR choreographs structural form to evoke deep emotional resonance. Each commission is conceived as a singular artwork, tuned meticulously to its topographical terrain.
+            </p>
+            <p class="philosophy-body">
+              From subterranean private wine cellars carved into granite hillsides to floating waterfront pavilions framed by hand-patinated bronze, our architecture is crafted to age with dignity across centuries.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 3: SELECTED PROJECTS (Full-Height Panels + Parallax)
+         ======================================================================= -->
+    <section id="projects">
+      <div class="noir-container">
+        <div class="projects-header">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom: 0.75rem;">02 / SELECTED COMMISSIONS</div>
+            <h2 class="projects-heading font-serif">Curated Works</h2>
+          </div>
+
+          <ul class="projects-filter-bar">
+            <li><button class="filter-btn active" data-filter="all">All Disciplines</button></li>
+            <li><button class="filter-btn" data-filter="architecture">Architecture</button></li>
+            <li><button class="filter-btn" data-filter="interior">Interiors</button></li>
+            <li><button class="filter-btn" data-filter="restoration">Restorations</button></li>
+          </ul>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+
+          <!-- Project 1: Villa Serein Dubai -->
+          <article class="project-card layout-left" data-category="architecture" data-id="villa-serein" id="project-villa-serein">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Palm Jumeirah · 2025</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1800&auto=format&fit=crop" 
+                  alt="Villa Serein Dubai" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">01</span>
+                  <span>PRIVATE RESIDENCE</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">Villa Serein</span>, Dubai
+                </h3>
+                <p class="project-desc">
+                  A travertine sanctuary defined by sweeping cantilevered volumes, subterranean courtyards, and direct Arabian Gulf water integration.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">1,450 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Roman Travertine</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Turnkey Build</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2: The Marrakesh Residence -->
+          <article class="project-card layout-right" data-category="architecture" data-id="marrakesh-residence" id="project-marrakesh">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Palmeraie · 2024</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1800&auto=format&fit=crop" 
+                  alt="The Marrakesh Residence" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">02</span>
+                  <span>CONTEMPORARY RIAD</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">The Marrakesh Residence</span>
+                </h3>
+                <p class="project-desc">
+                  Reinterpreting the traditional Moroccan courtyard through rammed-earth monoliths, brass water channels, and minimalist reflection pools.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">980 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Rammed Earth & Brass</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Architecture & Interior</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3: Kochi Waterfront Loft -->
+          <article class="project-card layout-left" data-category="interior" data-id="kochi-loft" id="project-kochi">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Kerala Backwaters · 2025</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1800&auto=format&fit=crop" 
+                  alt="Kochi Waterfront Loft" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">03</span>
+                  <span>COASTAL SANCTUARY</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">Kochi Waterfront Loft</span>
+                </h3>
+                <p class="project-desc">
+                  A high-ceilinged interior renovation featuring reclaimed Malabar teak, smoked glass partitions, and bespoke blackened bronze joinery.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">620 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Teak & Fluted Glass</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Full Interior Design</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 4: Casa Bruma Milan -->
+          <article class="project-card layout-right" data-category="restoration" data-id="casa-bruma" id="project-casa-bruma">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Brera, Milan · 2024</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop" 
+                  alt="Casa Bruma Milan" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">04</span>
+                  <span>HISTORIC PENTHOUSE</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">Casa Bruma</span>, Milan
+                </h3>
+                <p class="project-desc">
+                  Restoration of an 18th-century palazzo apartment, retaining neoclassical stuccowork while inserting minimalist Ceppo di Gré stone volumes.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">480 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Ceppo di Gré & Lime</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Adaptive Restoration</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 5: The Kyoto Pavilion -->
+          <article class="project-card layout-left" data-category="architecture" data-id="kyoto-pavilion" id="project-kyoto">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Higashiyama, Kyoto · 2025</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=1800&auto=format&fit=crop" 
+                  alt="The Kyoto Pavilion" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">05</span>
+                  <span>TEA RETREAT & RESIDENCE</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">The Kyoto Pavilion</span>
+                </h3>
+                <p class="project-desc">
+                  Charred cedar (Yakisugi) and blackened steel envelope a private meditative garden residence overlooking ancient cedar groves.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">350 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Yakisugi & Washi</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Architecture & Landscape</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 6: Aspen Ridge Manor -->
+          <article class="project-card layout-right" data-category="interior" data-id="aspen-ridge" id="project-aspen">
+            <div class="project-card-inner">
+              <div class="project-media">
+                <span class="project-badge">Colorado · 2023</span>
+                <img 
+                  src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=1800&auto=format&fit=crop" 
+                  alt="Aspen Ridge Manor" 
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="project-info">
+                <div class="project-meta-top">
+                  <span class="project-number">06</span>
+                  <span>ALPINE MODERNIST MANOR</span>
+                </div>
+                <h3 class="project-title font-serif">
+                  <span class="project-title-link">Aspen Ridge Manor</span>
+                </h3>
+                <p class="project-desc">
+                  Cast concrete fireplaces, frameless structural thermal glass, and honed Belgian bluestone tailored for high-altitude luxury living.
+                </p>
+                <div class="project-specs">
+                  <div class="spec-item">
+                    <span class="spec-label">Area</span>
+                    <span class="spec-value">1,200 m²</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Material</span>
+                    <span class="spec-value">Bluestone & Cast Concrete</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Scope</span>
+                    <span class="spec-value">Full Interior Architecture</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 4: APPROACH (3 Columns: Architecture / Interior / Turnkey)
+         ======================================================================= -->
+    <section id="approach">
+      <div class="noir-container">
+        <div class="approach-header">
+          <div class="section-eyebrow">03 / METHODOLOGY</div>
+          <h2 class="approach-heading font-serif">The Studio Discipline</h2>
+        </div>
+
+        <div class="approach-grid">
+          
+          <!-- Column 1: Architecture -->
+          <div class="approach-column" id="approachCol1">
+            <div class="approach-number">01</div>
+            <h3 class="approach-title font-serif">Architecture</h3>
+            <p class="approach-body">
+              Sculptural, site-responsive structural volumes designed to command presence while harmonizing with geological and environmental realities.
+            </p>
+            <ul class="approach-tags">
+              <li class="approach-tag">Site Topography</li>
+              <li class="approach-tag">Structural Engineering</li>
+              <li class="approach-tag">Monolithic Forms</li>
+            </ul>
+          </div>
+
+          <!-- Column 2: Interior Design -->
+          <div class="approach-column" id="approachCol2">
+            <div class="approach-number">02</div>
+            <h3 class="approach-title font-serif">Interior Atelier</h3>
+            <p class="approach-body">
+              Tactile, human-scaled material compositions where light, acoustic resonance, bespoke furniture, and rare natural stones elevate daily ritual.
+            </p>
+            <ul class="approach-tags">
+              <li class="approach-tag">Bespoke Millwork</li>
+              <li class="approach-tag">Curated Materiality</li>
+              <li class="approach-tag">Custom Lighting</li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Turnkey Execution -->
+          <div class="approach-column" id="approachCol3">
+            <div class="approach-number">03</div>
+            <h3 class="approach-title font-serif">Turnkey Delivery</h3>
+            <p class="approach-body">
+              Rigorous end-to-end execution, artisan curation, and white-glove site management ensuring uncompromising precision from sketch to key handover.
+            </p>
+            <ul class="approach-tags">
+              <li class="approach-tag">Master Craftsmanship</li>
+              <li class="approach-tag">Global Procurement</li>
+              <li class="approach-tag">Bespoke Curation</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 5: STUDIO (Split Layout: Photo + Bio + Count-Up Stats)
+         ======================================================================= -->
+    <section id="studio">
+      <div class="noir-container studio-grid">
+        
+        <div class="studio-portrait-wrapper">
+          <div class="studio-portrait-media">
+            <img 
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1600&auto=format&fit=crop" 
+              alt="Elena Laurent & Studio Noir Atelier Principals" 
+              loading="lazy"
+            />
+          </div>
+          <div class="studio-caption">
+            <div class="studio-caption-title">Atelier Principals</div>
+            <div class="studio-caption-text">Led by founding partners Elena Laurent & Alexander Vance.</div>
+          </div>
+        </div>
+
+        <div class="studio-content">
+          <div class="section-eyebrow">04 / THE ATELIER</div>
+          <h2 class="studio-heading font-serif">
+            A Collective of Radical Precision & Restraint.
+          </h2>
+
+          <div class="studio-bio">
+            <p>
+              STUDIO NOIR was established in Paris with a deliberate conviction: architecture must be enduring, quiet, and deeply sensorial. Operating across Europe, the Middle East, and Asia, our international atelier deliberately limits its commissions to eight masterworks per year.
+            </p>
+            <p>
+              Our multi-disciplinary team unites master architects, material scientists, and interior sculptors who believe that space has the profound capacity to recalibrate the human soul.
+            </p>
+          </div>
+
+          <!-- Stats Grid with Count-up -->
+          <div class="studio-stats-grid">
+            <div class="stat-card">
+              <div class="stat-number-wrap">
+                <span class="stat-number" data-target="18">0</span>
+                <span class="stat-suffix">+</span>
+              </div>
+              <span class="stat-label">International Awards</span>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number-wrap">
+                <span class="stat-number" data-target="42">0</span>
+              </div>
+              <span class="stat-label">Completed Masterworks</span>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number-wrap">
+                <span class="stat-number" data-target="14">0</span>
+              </div>
+              <span class="stat-label">Countries Represented</span>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number-wrap">
+                <span class="stat-number" data-target="100">0</span>
+                <span class="stat-suffix">%</span>
+              </div>
+              <span class="stat-label">Bespoke Fabrication</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 6: TESTIMONIAL (Parallax Background & Quote)
+         ======================================================================= -->
+    <section id="testimonial">
+      <div class="testimonial-bg-wrap">
+        <img 
+          src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2600&auto=format&fit=crop" 
+          alt="Atmospheric Architecture" 
+          class="testimonial-bg"
+          id="testimonialBg"
+        />
+        <div class="testimonial-overlay"></div>
+      </div>
+
+      <div class="noir-container testimonial-container">
+        <div class="quote-icon">“</div>
+        <blockquote class="testimonial-quote font-serif" id="testimonialQuote">
+          “STUDIO NOIR didn’t merely design our estate—they composed a timeless sanctuary where every sunrise feels theatrical and every room breathes tranquility.”
+        </blockquote>
+        <div class="testimonial-author">Lord & Lady Kensington</div>
+        <div class="testimonial-context">Villa Serein, Palm Jumeirah</div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 7: CONTACT & FOOTER
+         ======================================================================= -->
+    <section id="contact">
+      <div class="noir-container">
+        
+        <div class="contact-grid">
+          
+          <div class="contact-left">
+            <div class="section-eyebrow">05 / INITIATE DIALOGUE</div>
+            <h2 class="contact-statement font-serif">
+              Let us shape <span class="gold-text">spaces</span> that endure.
+            </h2>
+            <p class="contact-subtext">
+              We welcome confidential inquiries from prospective clients, developers of distinction, and cultural institutions globally.
+            </p>
+
+            <div class="studio-locations">
+              <div class="location-card">
+                <span class="location-city">Paris Atelier</span>
+                <span class="location-address">
+                  14 Rue de Beaujolais<br>
+                  75001 Paris, France<br>
+                  +33 1 42 68 00 24
+                </span>
+              </div>
+
+              <div class="location-card">
+                <span class="location-city">Dubai Studio</span>
+                <span class="location-address">
+                  Alserkal Avenue, Unit 42<br>
+                  Dubai, UAE<br>
+                  +971 4 338 8900
+                </span>
+              </div>
+
+              <div class="location-card">
+                <span class="location-city">Tokyo Bureau</span>
+                <span class="location-address">
+                  5-7-2 Minami-Aoyama<br>
+                  Minato-ku, Tokyo<br>
+                  +81 3 5410 8820
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-right">
+            <form class="contact-form" id="inquiryForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="clientName">Full Name *</label>
+                  <input type="text" id="clientName" class="form-input" placeholder="e.g. Jean-Luc Moreau" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="clientEmail">Email Address *</label>
+                  <input type="email" id="clientEmail" class="form-input" placeholder="e.g. jl.moreau@holding.com" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="projectLocation">Project Location</label>
+                  <input type="text" id="projectLocation" class="form-input" placeholder="City / Country">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="projectTypology">Commission Type</label>
+                  <select id="projectTypology" class="form-select">
+                    <option value="private-residence">Private Residence / Villa</option>
+                    <option value="interior-penthouse">Luxury Penthouse Interior</option>
+                    <option value="hospitality-retreat">Boutique Hospitality / Retreat</option>
+                    <option value="heritage-restoration">Historical Restoration</option>
+                    <option value="other">Bespoke Commission</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="projectVision">Vision & Details</label>
+                <textarea id="projectVision" class="form-textarea" placeholder="Share scale, timelines, architectural aspirations..."></textarea>
+              </div>
+
+              <button type="submit" class="form-submit-btn" id="submitBtn">
+                Submit Confidential Inquiry
+              </button>
+
+              <div class="form-status-message" id="formStatus">
+                ✓ Thank you. Your inquiry has been received. Our partner atelier will connect within 24 hours.
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Studio Footer -->
+        <footer class="studio-footer">
+          <div class="footer-top">
+            <div class="footer-brand font-serif">STUDIO NOIR</div>
+            <ul class="footer-links">
+              <li><a href="#philosophy" class="footer-link">Philosophy</a></li>
+              <li><a href="#projects" class="footer-link">Monographs</a></li>
+              <li><a href="#approach" class="footer-link">Approach</a></li>
+              <li><a href="#studio" class="footer-link">Atelier</a></li>
+              <li><a href="mailto:inquiries@studionoir-architecture.com" class="footer-link">inquiries@studionoir.com</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-bottom">
+            <div>© <span id="currentYear">2026</span> STUDIO NOIR ARCHITECTS. ALL RIGHTS RESERVED.</div>
+            <div>PARIS · DUBAI · TOKYO · NEW YORK</div>
+          </div>
+        </footer>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       PROJECT DETAIL DRAWER / MODAL
+       ========================================================================= -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-content-panel" id="modalContentPanel">
+      <button class="modal-close-btn" id="modalCloseBtn">
+        <span>Close</span>
+        <span>✕</span>
+      </button>
+
+      <div class="modal-category" id="modalCategory">RESIDENTIAL MONOGRAPH</div>
+      <h2 class="modal-title font-serif" id="modalTitle">Villa Serein Dubai</h2>
+      
+      <img src="" alt="" class="modal-hero-img" id="modalHeroImg">
+
+      <div class="modal-grid-details" id="modalSpecs">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <div class="modal-desc" id="modalDesc">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <div class="modal-gallery-row" id="modalGallery">
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <div style="text-align: right;">
+        <a href="#contact" class="nav-cta" id="modalInquireBtn" style="display: inline-block;">
+          Inquire About This Typology
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       JAVASCRIPT: GSAP, LENIS, SCROLLTRIGGER & INTERACTIONS
+       ========================================================================= -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Set current year in footer
+      const yearEl = document.getElementById('currentYear');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      // 2. Initialize Lenis Smooth Scroll
+      let lenis = null;
+      try {
+        if (typeof Lenis !== 'undefined') {
+          lenis = new Lenis({
+            duration: 1.25,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential luxury decay
+            smoothWheel: true,
+            wheelMultiplier: 0.9,
+            touchMultiplier: 1.5,
+          });
+
+          function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+          }
+          requestAnimationFrame(raf);
+        }
+      } catch (e) {
+        console.warn('Lenis init failed, fallback to native scrolling', e);
+      }
+
+      // 3. Register GSAP ScrollTrigger
+      if (typeof gsap !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        if (lenis) {
+          lenis.on('scroll', ScrollTrigger.update);
+          gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+          });
+          gsap.ticker.lagSmoothing(0);
+        }
+      }
+
+      // 4. Custom Cursor Logic with Magnetic Lag
+      const cursor = document.getElementById('customCursor');
+      const follower = document.getElementById('cursorFollower');
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let followerX = mouseX;
+      let followerY = mouseY;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (cursor) {
+          cursor.style.left = `${mouseX}px`;
+          cursor.style.top = `${mouseY}px`;
+        }
+      });
+
+      function animateCursor() {
+        followerX += (mouseX - followerX) * 0.12;
+        followerY += (mouseY - followerY) * 0.12;
+        if (follower) {
+          follower.style.left = `${followerX}px`;
+          follower.style.top = `${followerY}px`;
+        }
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      // Cursor hover states for interactive elements
+      const projectCards = document.querySelectorAll('.project-card');
+      projectCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          document.body.classList.add('cursor-hover-project');
+        });
+        card.addEventListener('mouseleave', () => {
+          document.body.classList.remove('cursor-hover-project');
+        });
+      });
+
+      const linksAndButtons = document.querySelectorAll('a, button, input, select, textarea');
+      linksAndButtons.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          document.body.classList.add('cursor-hover-link');
+        });
+        el.addEventListener('mouseleave', () => {
+          document.body.classList.remove('cursor-hover-link');
+        });
+      });
+
+      // 5. Preloader Sequence & Hero Stagger Entrance
+      const preloader = document.getElementById('preloader');
+      const counterEl = document.getElementById('preloadCounter');
+      const barEl = document.getElementById('preloadBar');
+      let count = 0;
+
+      const preloaderInterval = setInterval(() => {
+        count += Math.floor(Math.random() * 8) + 4;
+        if (count >= 100) {
+          count = 100;
+          clearInterval(preloaderInterval);
+          if (counterEl) counterEl.textContent = '100';
+          if (barEl) barEl.style.width = '100%';
+
+          setTimeout(() => {
+            if (typeof gsap !== 'undefined') {
+              gsap.to(preloader, {
+                yPercent: -100,
+                duration: 1.1,
+                ease: "power3.inOut",
+                onComplete: () => {
+                  preloader.style.display = 'none';
+                  triggerHeroAnimations();
+                }
+              });
+            } else {
+              preloader.style.opacity = '0';
+              preloader.style.pointerEvents = 'none';
+              triggerHeroAnimations();
+            }
+          }, 350);
+        } else {
+          if (counterEl) counterEl.textContent = count < 10 ? `0${count}` : `${count}`;
+          if (barEl) barEl.style.width = `${count}%`;
+        }
+      }, 35);
+
+      function triggerHeroAnimations() {
+        if (typeof gsap === 'undefined') return;
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        tl.fromTo('#heroTag', 
+          { opacity: 0, y: 30 }, 
+          { opacity: 1, y: 0, duration: 1.2 }
+        )
+        .fromTo('#heroTitle', 
+          { opacity: 0, y: 50 }, 
+          { opacity: 1, y: 0, duration: 1.4 }, 
+          "-=0.9"
+        )
+        .fromTo('#heroBottom', 
+          { opacity: 0, y: 30 }, 
+          { opacity: 1, y: 0, duration: 1.2 }, 
+          "-=1.0"
+        )
+        .fromTo('#navbar', 
+          { opacity: 0, y: -20 }, 
+          { opacity: 1, y: 0, duration: 1.0 }, 
+          "-=1.0"
+        );
+      }
+
+      // 6. Navigation Scroll State (Transparent to Solid Blur)
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Mobile Menu Toggle
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileNav = document.getElementById('mobileNavOverlay');
+      if (mobileBtn && mobileNav) {
+        mobileBtn.addEventListener('click', () => {
+          mobileNav.classList.toggle('open');
+          const isOpen = mobileNav.classList.contains('open');
+          mobileBtn.querySelector('span:first-child').style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+          mobileBtn.querySelector('span:last-child').style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none';
+        });
+
+        mobileNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mobileNav.classList.remove('open');
+            mobileBtn.querySelector('span:first-child').style.transform = 'none';
+            mobileBtn.querySelector('span:last-child').style.transform = 'none';
+          });
+        });
+      }
+
+      // 7. GSAP ScrollTrigger Animations for Philosophy, Projects & Approach
+      if (typeof gsap !== 'undefined') {
+        
+        // Philosophy text subtle fade-in and highlight
+        gsap.from('#manifestoHeading', {
+          scrollTrigger: {
+            trigger: '#philosophy',
+            start: 'top 75%',
+            toggleActions: 'play none none none'
+          },
+          opacity: 0,
+          y: 40,
+          duration: 1.4,
+          ease: "power3.out"
+        });
+
+        gsap.from('.philosophy-subtext p', {
+          scrollTrigger: {
+            trigger: '.philosophy-subtext',
+            start: 'top 85%',
+          },
+          opacity: 0,
+          y: 30,
+          stagger: 0.25,
+          duration: 1.2,
+          ease: "power3.out"
+        });
+
+        // Project Cards entrance and Parallax on Images
+        document.querySelectorAll('.project-card').forEach((card, index) => {
+          const img = card.querySelector('.project-media img');
+          
+          gsap.from(card, {
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 80%',
+            },
+            opacity: 0,
+            y: 60,
+            duration: 1.3,
+            ease: "power3.out"
+          });
+
+          if (img) {
+            gsap.fromTo(img, 
+              { yPercent: -10 },
+              {
+                yPercent: 10,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true
+                }
+              }
+            );
+          }
+        });
+
+        // Approach Columns (01 / 02 / 03) staggered entrance
+        gsap.from('.approach-column', {
+          scrollTrigger: {
+            trigger: '#approach',
+            start: 'top 70%',
+          },
+          opacity: 0,
+          y: 50,
+          stagger: 0.25,
+          duration: 1.3,
+          ease: "power3.out"
+        });
+
+        // Studio Portrait Parallax & Stats Count-up
+        gsap.from('.studio-portrait-media', {
+          scrollTrigger: {
+            trigger: '#studio',
+            start: 'top 75%',
+          },
+          opacity: 0,
+          x: -40,
+          duration: 1.4,
+          ease: "power3.out"
+        });
+
+        gsap.from('.studio-content', {
+          scrollTrigger: {
+            trigger: '#studio',
+            start: 'top 75%',
+          },
+          opacity: 0,
+          x: 40,
+          duration: 1.4,
+          ease: "power3.out"
+        });
+
+        // Animated Count-Up Numbers
+        const statElements = document.querySelectorAll('.stat-number');
+        statElements.forEach(stat => {
+          const target = parseInt(stat.getAttribute('data-target'), 10);
+          
+          ScrollTrigger.create({
+            trigger: stat,
+            start: "top 88%",
+            once: true,
+            onEnter: () => {
+              gsap.to({ val: 0 }, {
+                val: target,
+                duration: 2.2,
+                ease: "power3.out",
+                onUpdate: function() {
+                  stat.textContent = Math.floor(this.targets()[0].val);
+                }
+              });
+            }
+          });
+        });
+
+        // Testimonial Background Parallax & Quote Reveal
+        gsap.fromTo('#testimonialBg', 
+          { yPercent: -15 },
+          {
+            yPercent: 15,
+            ease: "none",
+            scrollTrigger: {
+              trigger: '#testimonial',
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true
+            }
+          }
+        );
+
+        gsap.from('#testimonialQuote', {
+          scrollTrigger: {
+            trigger: '#testimonial',
+            start: 'top 70%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 1.5,
+          ease: "power3.out"
+        });
+
+        // Contact Section Reveal
+        gsap.from('.contact-left', {
+          scrollTrigger: {
+            trigger: '#contact',
+            start: 'top 75%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 1.3,
+          ease: "power3.out"
+        });
+
+        gsap.from('.contact-right', {
+          scrollTrigger: {
+            trigger: '#contact',
+            start: 'top 75%',
+          },
+          opacity: 0,
+          y: 40,
+          duration: 1.3,
+          delay: 0.2,
+          ease: "power3.out"
+        });
+      }
+
+      // 8. Projects Filter Functionality
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const filterVal = btn.getAttribute('data-filter');
+          const cards = document.querySelectorAll('.project-card');
+
+          cards.forEach(card => {
+            const cat = card.getAttribute('data-category');
+            if (filterVal === 'all' || cat === filterVal) {
+              card.style.display = 'block';
+              gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+            } else {
+              card.style.display = 'none';
+            }
+          });
+          
+          if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+          }
+        });
+      });
+
+      // 9. Project Detailed Modal / Drawer Data & Logic
+      const projectDatabase = {
+        'villa-serein': {
+          title: 'Villa Serein, Dubai',
+          category: 'RESIDENTIAL ARCHITECTURE · PALM JUMEIRAH',
+          image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Palm Jumeirah, Dubai' },
+            { label: 'Year Completed', value: '2025' },
+            { label: 'Gross Area', value: '1,450 m² (15,600 sq ft)' },
+            { label: 'Lead Architect', value: 'Alexander Vance' },
+            { label: 'Primary Materials', value: 'Navona Travertine, Blackened Bronze, Fluted Glass' }
+          ],
+          desc: 'Villa Serein is conceived as an architectural monument anchored in the Arabian coastal sand. The design employs a dual-envelope travertine facade that insulates against intense desert heat while directing cooling marine breezes into subterranean water courtyards. Every corner is custom-engineered without visible joints.'
+        },
+        'marrakesh-residence': {
+          title: 'The Marrakesh Residence',
+          category: 'CONTEMPORARY RIAD · PALMERAIE',
+          image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Palmeraie, Marrakesh' },
+            { label: 'Year Completed', value: '2024' },
+            { label: 'Gross Area', value: '980 m²' },
+            { label: 'Lead Architect', value: 'Elena Laurent' },
+            { label: 'Primary Materials', value: 'Stabilized Rammed Earth, Hand-Troweled Tadelakt' }
+          ],
+          desc: 'Commissioned by a contemporary art patron, the residence reinterprets Moroccan vernacular spatial archetypes. Thick rammed-earth walls create profound thermal inertia, with central water courtyards framed by patinated bronze pergolas that cast poetic geometric shadows as the sun traverses the North African sky.'
+        },
+        'kochi-loft': {
+          title: 'Kochi Waterfront Loft',
+          category: 'COASTAL INTERIOR ARCHITECTURE · KERALA',
+          image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Kochi Backwaters, India' },
+            { label: 'Year Completed', value: '2025' },
+            { label: 'Gross Area', value: '620 m²' },
+            { label: 'Interior Director', value: 'Elena Laurent' },
+            { label: 'Primary Materials', value: 'Reclaimed Malabar Teak, Hand-Polished Basalt' }
+          ],
+          desc: 'Overlooking the quiet mangrove waterways, this interior transformation honors indigenous Kerala joinery combined with European minimalism. Full-height pivot screens of reclaimed timber open the double-height living hall to tropical maritime air.'
+        },
+        'casa-bruma': {
+          title: 'Casa Bruma, Milan',
+          category: 'PALAZZO RESTORATION & PENTHOUSE',
+          image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Via Brera, Milan' },
+            { label: 'Year Completed', value: '2024' },
+            { label: 'Gross Area', value: '480 m²' },
+            { label: 'Lead Architect', value: 'Matteo Rossi' },
+            { label: 'Primary Materials', value: 'Ceppo di Gré Stone, Smoked Eucalyptus' }
+          ],
+          desc: 'A dialogue between 18th-century frescoed ceilings and clean geometric monoliths. The kitchen and bathroom blocks are sculpted out of solid grey Ceppo di Gré, appearing as contemporary architectural sculptures set inside historic heritage architecture.'
+        },
+        'kyoto-pavilion': {
+          title: 'The Kyoto Pavilion',
+          category: 'MEDITATIVE RETREAT & TEA HOUSE',
+          image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1528164344705-475426879c0d?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Higashiyama, Kyoto' },
+            { label: 'Year Completed', value: '2025' },
+            { label: 'Gross Area', value: '350 m²' },
+            { label: 'Co-Design', value: 'Kenji Takahashi Atelier' },
+            { label: 'Primary Materials', value: 'Yakisugi Charred Cedar, Washi Screens' }
+          ],
+          desc: 'Nestled on a steep forested slope, this pavilion combines centuries-old Japanese temple carpentry with razor-thin structural steel cantilevers. The tearoom frames a single ancient Japanese maple with frameless low-iron glass.'
+        },
+        'aspen-ridge': {
+          title: 'Aspen Ridge Manor',
+          category: 'ALPINE MODERNIST RESIDENCE',
+          image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=1800&auto=format&fit=crop',
+          gallery: [
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1200&auto=format&fit=crop'
+          ],
+          specs: [
+            { label: 'Location', value: 'Red Mountain, Aspen, Colorado' },
+            { label: 'Year Completed', value: '2023' },
+            { label: 'Gross Area', value: '1,200 m²' },
+            { label: 'Lead Architect', value: 'Alexander Vance' },
+            { label: 'Primary Materials', value: 'Board-Formed Concrete, Belgian Bluestone' }
+          ],
+          desc: 'High-altitude luxury redefined with monolithic board-formed concrete and warm rift-sawn white oak. Massive triple-glazed motorized glass walls slide completely into pocket cavities, merging the radiant heated living salon with panoramic snow-capped peaks.'
+        }
+      };
+
+      const modal = document.getElementById('projectModal');
+      const modalClose = document.getElementById('modalCloseBtn');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalCategory = document.getElementById('modalCategory');
+      const modalHeroImg = document.getElementById('modalHeroImg');
+      const modalSpecs = document.getElementById('modalSpecs');
+      const modalDesc = document.getElementById('modalDesc');
+      const modalGallery = document.getElementById('modalGallery');
+      const modalInquireBtn = document.getElementById('modalInquireBtn');
+
+      function openModal(projectId) {
+        const data = projectDatabase[projectId];
+        if (!data) return;
+
+        modalTitle.textContent = data.title;
+        modalCategory.textContent = data.category;
+        modalHeroImg.src = data.image;
+        modalHeroImg.alt = data.title;
+        modalDesc.textContent = data.desc;
+
+        modalSpecs.innerHTML = data.specs.map(spec => `
+          <div class="spec-item">
+            <span class="spec-label">${spec.label}</span>
+            <span class="spec-value">${spec.value}</span>
+          </div>
+        `).join('');
+
+        modalGallery.innerHTML = data.gallery.map(imgSrc => `
+          <img src="${imgSrc}" alt="${data.title} interior monograph detail" loading="lazy" />
+        `).join('');
+
+        modal.classList.add('active');
+        if (lenis) lenis.stop();
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+        if (lenis) lenis.start();
+      }
+
+      document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const pId = card.getAttribute('data-id');
+          openModal(pId);
+        });
+      });
+
+      if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+      }
+
+      if (modalInquireBtn) {
+        modalInquireBtn.addEventListener('click', () => {
+          closeModal();
+        });
+      }
+
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      // 10. Contact Form Submission Handling
+      const form = document.getElementById('inquiryForm');
+      const statusMsg = document.getElementById('formStatus');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Transmitting Inquiry...';
+          
+          setTimeout(() => {
+            statusMsg.style.display = 'block';
+            submitBtn.textContent = 'Inquiry Dispatched';
+            form.reset();
+            setTimeout(() => {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Submit Confidential Inquiry';
+            }, 6000);
+          }, 900);
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>

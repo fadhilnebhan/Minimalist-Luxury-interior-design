@@ -1,0 +1,6 @@
+{
+  "name": "STUDIO NOIR - Architecture & Interior",
+  "description": "An editorial, cinematic portfolio for high-end architecture and interior design studio STUDIO NOIR with GSAP scroll animations, Lenis smooth scrolling, and bespoke luxury aesthetics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
